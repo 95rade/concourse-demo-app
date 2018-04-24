@@ -5,8 +5,10 @@ image: docker:///golang#1.4.2-wheezy
 
 inputs:
 - name: concourse-demo-app-master
-  path: go/src/github.com/xchapter7x/concourse-demo-app
+  #path: go/src/github.com/xchapter7x/concourse-demo-app
+  path: go/src/github.com/95rade/concourse-demo-app
 
 run:
-  path: go/src/github.com/xchapter7x/concourse-demo-app/ci/run-load
+  #path: go/src/github.com/xchapter7x/concourse-demo-app/ci/run-load
+  path: go/src/github.com/95rade/concourse-demo-app/ci/run-load
 
