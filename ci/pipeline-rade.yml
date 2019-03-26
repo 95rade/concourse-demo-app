@@ -1,0 +1,96 @@
+groups: 
+- name: delivery
+  jobs:
+  - unit-tests
+  - compile-smoke
+  - deploy-stage
+  - load-test
+- name: deployment
+  jobs:
+  - shipit
+
+resources:
+- name: concourse-demo-app-master
+  type: git
+  source:
+    branch: master
+    private_key: {{github-private-key}}
+    uri: git@github.com:95rade/concourse-demo-app.git
+- name: staging
+  type: cf
+  source:
+    api: https://api.run.pez.pivotal.io
+    organization: pivot-jcalabrese
+    username: {{deploy-username}}
+    password: {{deploy-password}}
+    skip_cert_check: false
+    space: demo-staging
+- name: production
+  type: cf
+  source:
+    api: https://api.run.pez.pivotal.io
+    organization: pivot-jcalabrese
+    username: {{deploy-username}}
+    password: {{deploy-password}}
+    skip_cert_check: false
+    space: demo-production
+
+jobs:
+- name: unit-tests
+  serial: true
+  public: true
+  plan:
+  - get: concourse-demo-app-master 
+    trigger: true
+  - task: unit-tests
+    file: concourse-demo-app-master/ci/unit.yml
+- name: compile-smoke 
+  serial: true
+  public: true
+  plan:
+  - get: concourse-demo-app-master 
+    trigger: true
+    passed:
+      - unit-tests
+  - task: compile-smoke
+    file: concourse-demo-app-master/ci/compile.yml
+- name: deploy-stage
+  serial: true
+  plan:
+  - get: concourse-demo-app-master
+    trigger: true
+    passed:
+      - compile-smoke
+  - put: staging
+    params:
+      manifest: concourse-demo-app-master/manifests/staging.yml
+      path: concourse-demo-app-master
+      current_app_name: demo-app-stage
+- name: load-test 
+  public: true
+  plan:
+  - get: concourse-demo-app-master
+    trigger: true
+    passed:
+      - deploy-stage
+  - task: load-test 
+    file: concourse-demo-app-master/ci/load.yml
+    #config:
+    #  params: 
+    #    "CFUSER": {{deploy-username}}
+    #    "CFPASS": {{deploy-password}}
+    #    "ORG": pivot-jcalabrese
+    #    "SPACE": demo-staging
+    #    "API": https://api.run.pez.pivotal.io
+    #    "APPNAME": demo-app-stage
+- name: shipit
+  plan:
+  - get: concourse-demo-app-master
+    trigger: true
+    passed:
+      - load-test
+  - put: production
+    params:
+      manifest: concourse-demo-app-master/manifests/prod.yml
+      path: concourse-demo-app-master
+      current_app_name: demo-app-prod
