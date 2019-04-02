@@ -45,7 +45,8 @@ jobs:
   - get: concourse-demo-app-master 
     trigger: true
   - task: unit-tests
-    file: concourse-demo-app-master/ci/unit.yml
+    #file: concourse-demo-app-master/ci/unit.yml
+    file: concourse-demo-app-master/ci/run-unit-tests.sh
 
 - name: compile-smoke 
   serial: true
