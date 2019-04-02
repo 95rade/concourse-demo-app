@@ -56,7 +56,7 @@ jobs:
     passed:
       - unit-tests
   - task: compile-smoke
-    file: concourse-demo-app-master/ci/compile.yml
+    file: concourse-demo-app-master/ci/task-compile.yml
 
 - name: deploy-stage
   serial: true
