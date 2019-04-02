@@ -9,8 +9,10 @@ image:
 inputs:
 - name: concourse-demo-app-master
   #path: go/src/github.com/xchapter7x/concourse-demo-app
-  path: go/src/github.com/95rade/concourse-demo-app
+  path: concourse-demo-app
 
 run:
   #path: go/src/github.com/xchapter7x/concourse-demo-app/ci/run-unit-tests
-  path: go/src/github.com/95rade/concourse-demo-app/ci/run-unit-tests
+  path: ./concourse-demo-app/ci/run-unit-tests.sh
+  args: []
+
