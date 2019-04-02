@@ -1,11 +1,16 @@
 ---
 platform: linux
+
 #image: docker:///golang#1.4.2-wheezy
-image: golang#1.9-alpine
+image: 
+- name: golang/1.9-alpine
+- tag: latest
+
 inputs:
 - name: concourse-demo-app-master
   #path: go/src/github.com/xchapter7x/concourse-demo-app
   path: go/src/github.com/95rade/concourse-demo-app
+
 run:
   #path: go/src/github.com/xchapter7x/concourse-demo-app/ci/run-unit-tests
   path: go/src/github.com/95rade/concourse-demo-app/ci/run-unit-tests
