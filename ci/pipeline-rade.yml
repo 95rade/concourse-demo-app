@@ -14,26 +14,28 @@ resources:
   type: git
   source:
     branch: master
-    private_key: {{github-private-key}}
+    private_key: ((github-private-key))
     uri: git@github.com:95rade/concourse-demo-app.git
+
 - name: staging
   type: cf
   source:
-    api: https://api.run.pez.pivotal.io
-    organization: pivot-jcalabrese
-    username: {{deploy-username}}
-    password: {{deploy-password}}
-    skip_cert_check: false
-    space: demo-staging
+    api: ((cf-api))
+    organization: ((cf-organization))
+    username: ((cf-username))
+    password: ((cf-password))
+    skip_cert_check: true
+    space: ((cf-space))
+
 - name: production
   type: cf
   source:
-    api: https://api.run.pez.pivotal.io
-    organization: pivot-jcalabrese
-    username: {{deploy-username}}
-    password: {{deploy-password}}
-    skip_cert_check: false
-    space: demo-production
+    api: ((cf-api))
+    organization: ((cf-organization))
+    username: ((cf-username))
+    password: ((cf-password))
+    skip_cert_check: true
+    space: ((cf-space))
 
 jobs:
 - name: unit-tests
@@ -44,6 +46,7 @@ jobs:
     trigger: true
   - task: unit-tests
     file: concourse-demo-app-master/ci/unit.yml
+
 - name: compile-smoke 
   serial: true
   public: true
@@ -54,6 +57,7 @@ jobs:
       - unit-tests
   - task: compile-smoke
     file: concourse-demo-app-master/ci/compile.yml
+
 - name: deploy-stage
   serial: true
   plan:
@@ -66,6 +70,7 @@ jobs:
       manifest: concourse-demo-app-master/manifests/staging.yml
       path: concourse-demo-app-master
       current_app_name: demo-app-stage
+
 - name: load-test 
   public: true
   plan:
@@ -75,13 +80,14 @@ jobs:
       - deploy-stage
   - task: load-test 
     file: concourse-demo-app-master/ci/load.yml
+    # don't need both 'file' and 'config' in task step !
     #config:
     #  params: 
-    #    "CFUSER": {{deploy-username}}
-    #    "CFPASS": {{deploy-password}}
-    #    "ORG": pivot-jcalabrese
-    #    "SPACE": demo-staging
-    #    "API": https://api.run.pez.pivotal.io
+    #    "CFUSER": ((cf-username))
+    #    "CFPASS": ((cf-password))
+    #    "ORG": ((cf-organization))
+    #    "SPACE": ((cf-space))
+    #    "API": ((cf-api))
     #    "APPNAME": demo-app-stage
 - name: shipit
   plan:
