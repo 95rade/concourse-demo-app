@@ -67,7 +67,7 @@ jobs:
       - compile-smoke
   - put: staging
     params:
-      #manifest: concourse-demo-app-master/manifests/staging.yml
+      manifest: concourse-demo-app-master/manifests/staging.yml
       path: concourse-demo-app-master
       current_app_name: demo-app-stage
 
