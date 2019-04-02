@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -xe
+#set -xe
 
-export GOPATH=$PWD/go
-export PATH=$GOPATH/bin:$PATH
+#export GOPATH=$PWD/go
+#export PATH=$GOPATH/bin:$PATH
 pwd
 ls -ltr
 #go get github.com/tools/godep
