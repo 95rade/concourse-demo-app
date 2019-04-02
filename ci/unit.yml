@@ -8,8 +8,8 @@ image:
 
 inputs:
 - name: concourse-demo-app-master
-  #path: go/src/github.com/xchapter7x/concourse-demo-app
-  path: concourse-demo-app
+  path: go/src/github.com/xchapter7x/concourse-demo-app
+  #path: concourse-demo-app  # Rade: not sure if you need both -name and path: as input:
 
 run:
   #path: go/src/github.com/xchapter7x/concourse-demo-app/ci/run-unit-tests
